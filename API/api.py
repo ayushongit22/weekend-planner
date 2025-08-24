@@ -19,7 +19,7 @@ GEMINI_API_KEY = "AIzaSyBss-VliYiVEptERQgoEXYmSaiwn1OOD5A"
 genai.configure(api_key=GEMINI_API_KEY)
 
 # === Local API key for your app ===
-VALID_API_KEY = "weekendplanner"
+# VALID_API_KEY = "weekendplanner"
 
 # === Pydantic model ===
 class PromptRequest(BaseModel):
@@ -78,8 +78,8 @@ Now process this:
 # === /ask endpoint ===
 @app.post("/ask")
 async def ask_ai(payload: PromptRequest):
-    if payload.api_key != VALID_API_KEY:
-        raise HTTPException(status_code=401, detail="Invalid API Key")
+    # if payload.api_key != VALID_API_KEY:
+    #     raise HTTPException(status_code=401, detail="Invalid API Key")
 
     intent = extract_intent_with_gemini(payload.query)
     event_type = intent.get("event_type")

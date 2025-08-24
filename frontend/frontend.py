@@ -8,11 +8,11 @@ API_URL = "https://971a380e2ad4.ngrok-free.app/ask"
 CINEMAS_API_URL = "https://971a380e2ad4.ngrok-free.app/cinemas"
 
 
-st.set_page_config(page_title="Weekend Planner", page_icon="🧠")
-st.title("🧭 Weekend Planner")
+st.set_page_config(page_title="VentureScan AI", page_icon="🔍")
+st.title("🔍 VentureScan AI")
 
 query = st.text_input("Enter your prompt:")
-api_key = st.text_input("API Key", type="password")
+# api_key = st.text_input("API Key", type="password")
 submit = st.button("Submit")
 
 def render_object(obj: dict):
