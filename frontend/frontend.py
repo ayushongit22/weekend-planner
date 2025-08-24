@@ -55,69 +55,66 @@ def render_object(obj: dict):
         st.divider()
 
 if submit:
-    if not query or not api_key:
-        st.warning("Please enter both a prompt and API key.")
-    else:
-        with st.spinner("Thinking..."):
-            try:
-                response = requests.post(API_URL, json={"query": query, "api_key": api_key})
-                result = response.json()
+    with st.spinner("Thinking..."):
+        try:
+            response = requests.post(API_URL, json={"query": query})
+            result = response.json()
 
-                if response.status_code == 200:
-                    event_type = result.get("event_type")
-                    location = result.get("location")
-                    st.success(f"**{event_type.upper()}** in **{location.title()}**")
+            if response.status_code == 200:
+                event_type = result.get("event_type")
+                location = result.get("location")
+                st.success(f"**{event_type.upper()}** in **{location.title()}**")
 
-                    if event_type == "cinemas":
-                        # 👇 Call your /cinemas API automatically!
-                        cinemas_res = requests.get(CINEMAS_API_URL, params={"city": location})
-                        
-                        if cinemas_res.status_code == 200:
-                            cinema_result = cinemas_res.json()
-                            data = cinema_result.get("cinemas", [])
-                            st.session_state.cinema_data = data
-                            st.info(f"**Found {len(data)} cinemas in {location.title()}:**")
-                            if not data:
-                                st.info("No results found.")
-                            
-                                # for item in data:
-                                #     if isinstance(item, dict):
-                                #         render_object(item)
-                                #     else:
-                                #         st.write(item)
-                            # else:
-                            #     st.write(data)
-
-                        else:
-                            st.error(f"Failed to fetch cinemas: {cinemas_res.text}")
-
-                    elif event_type == "restaurants":
-                        st.session_state.data = result
-                        st.session_state.cuisines_list = []
-                        st.session_state.address = result.get("address")
-                        st.session_state.lat = result.get("latitude")
-                        st.session_state.long = result.get("longitude")
-                        for cuisine in result.get("data", []):
-                            st.session_state.cuisines_list.append(cuisine.get("label", "Unknown"))
-                        
-                    else:
-                        data = result.get("data", [])
+                if event_type == "cinemas":
+                    # 👇 Call your /cinemas API automatically!
+                    cinemas_res = requests.get(CINEMAS_API_URL, params={"city": location})
+                    
+                    if cinemas_res.status_code == 200:
+                        cinema_result = cinemas_res.json()
+                        data = cinema_result.get("cinemas", [])
+                        st.session_state.cinema_data = data
+                        st.info(f"**Found {len(data)} cinemas in {location.title()}:**")
                         if not data:
                             st.info("No results found.")
-                        elif isinstance(data, list):
-                            for item in data:
-                                if isinstance(item, dict):
-                                    render_object(item)
-                                else:
-                                    st.write(item)
-                        else:
-                            st.write(data)
+                        
+                            # for item in data:
+                            #     if isinstance(item, dict):
+                            #         render_object(item)
+                            #     else:
+                            #         st.write(item)
+                        # else:
+                        #     st.write(data)
 
+                    else:
+                        st.error(f"Failed to fetch cinemas: {cinemas_res.text}")
+
+                elif event_type == "restaurants":
+                    st.session_state.data = result
+                    st.session_state.cuisines_list = []
+                    st.session_state.address = result.get("address")
+                    st.session_state.lat = result.get("latitude")
+                    st.session_state.long = result.get("longitude")
+                    for cuisine in result.get("data", []):
+                        st.session_state.cuisines_list.append(cuisine.get("label", "Unknown"))
+                    
                 else:
-                    st.error(f"Error {response.status_code}: {result.get('detail')}")
+                    data = result.get("data", [])
+                    if not data:
+                        st.info("No results found.")
+                    elif isinstance(data, list):
+                        for item in data:
+                            if isinstance(item, dict):
+                                render_object(item)
+                            else:
+                                st.write(item)
+                    else:
+                        st.write(data)
 
-            except Exception as e:
-                st.error(f"Failed to connect to API: {str(e)}")
+            else:
+                st.error(f"Error {response.status_code}: {result.get('detail')}")
+
+        except Exception as e:
+            st.error(f"Failed to connect to API: {str(e)}")
 
 if 'cuisines_list' in st.session_state:
     result = st.session_state.data
