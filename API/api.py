@@ -24,7 +24,6 @@ genai.configure(api_key=GEMINI_API_KEY)
 # === Pydantic model ===
 class PromptRequest(BaseModel):
     query: str
-    api_key: str
 class CinemaShowRequest(BaseModel):
     cinema_name: str
     url: str
