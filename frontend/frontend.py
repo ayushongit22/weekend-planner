@@ -4,8 +4,8 @@ import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))  # Add project root to path
 from restaurants.restaurant import get_restaurants, process_restaurant_urls
-API_URL = "https://971a380e2ad4.ngrok-free.app/ask"
-CINEMAS_API_URL = "https://971a380e2ad4.ngrok-free.app/cinemas"
+API_URL = "https://7f98f99b5915.ngrok-free.app/ask"
+CINEMAS_API_URL = "https://7f98f99b5915.ngrok-free.app/cinemas"
 
 
 st.set_page_config(page_title="VentureScan AI", page_icon="🔍")
@@ -161,7 +161,7 @@ if 'cinema_data' in st.session_state:
                     "date": selected_cinema.get("date"),
                 }
 
-                res = requests.post("https://971a380e2ad4.ngrok-free.app/cinema_shows", json=payload)
+                res = requests.post("https://7f98f99b5915.ngrok-free.app/cinema_shows", json=payload)
                 shows_data = res.json()
 
                 if res.status_code == 200:
